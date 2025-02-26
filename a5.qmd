@@ -1,0 +1,88 @@
+---
+title: "Assignment 5"
+author: "Jooha Lee"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    toc_depth: 3
+    number_sections: true
+  pdf_document:
+    toc: true
+    number_sections: true
+editor: "visual"
+execute:
+    echo : false
+bibliography : references.bib
+---
+
+```{python}
+import pandas as pd
+import matplotlib.pyplot as plt
+```
+
+```{python}
+wdi = pd.read_csv("/Users/joohalee/Desktop/a5/wdi.csv")
+```
+
+```{python}
+wdi
+```
+
+```{python}
+df = pd.DataFrame(wdi)
+
+df_gdp_per_capita = df[['country', 'gdp_per_capita']]
+df_gdp_per_capita_sorted = df_gdp_per_capita.sort_values(by='gdp_per_capita', ascending=True)
+df_gdp_per_capita_sorted = df_gdp_per_capita_sorted.dropna()
+df_gdp_per_capita_sorted_top5 = df_gdp_per_capita_sorted.nlargest(5, 'gdp_per_capita')
+```
+
+```{python}
+df_life_expectancy = df[['country', 'life_expectancy', 'unemployment_rate']]
+df_life_expectancy_sorted = df_life_expectancy.sort_values(by='unemployment_rate', ascending=True)
+df_life_expectancy_sorted = df_life_expectancy_sorted.dropna()
+```
+
+
+```{python}
+#| label: fig-gdp-per-capita
+#| fig-cap: "GDP per Capita by Country (Sorted Lowest to Highest). Source: Mock Data."
+#| echo: false
+
+plt.figure(figsize=(12, 6))
+plt.barh(df_gdp_per_capita_sorted_top5['country'], df_gdp_per_capita_sorted_top5['gdp_per_capita'], color='skyblue')
+plt.xlabel('GDP per Capita (USD)')
+plt.ylabel('Country')
+plt.title('GDP per Capita by Country (Sorted Lowest to Highest)')
+plt.grid(axis='x', linestyle='--', alpha=0.7)
+plt.show()
+```
+
+
+```{python}
+#| label: fig-life-expectancy-vs-unemployment
+#| fig-cap: "Life Expectancy vs. Unemployment Rate. Source: Mock Data."
+#| echo: false
+
+plt.figure(figsize=(10, 6))
+plt.scatter(df_life_expectancy_sorted['unemployment_rate'], df_life_expectancy_sorted['life_expectancy'], color='red', alpha=0.7, edgecolors='black')
+plt.xlabel('Unemployment Rate (%)')
+plt.ylabel('Life Expectancy (Years)')
+plt.title('Life Expectancy vs. Unemployment Rate')
+plt.grid(True, linestyle='--', alpha=0.7)
+```
+
+First thing that I found out from the analysis of the data that was given, which was from 2022 as shown in @fig-gdp-per-capita, Monaco has the highest gdp per capita, followed by Lienchtenstein, Luxembourg, Bermuda, and Norway as top 5 GDP per capita. Comparing this data to the one from 2001, we learn that the countries with top 5 gdp per capita are Lexembourg, Switzerland, Norway, United States, and Denmark [@2001_gdp_per_capita]. This data shows that Luxembourg and Norway stayed as countries with top 5 gdp per capita, indicating that people from those two have been maintaining high level of economic output for a long time
+
+ Also in the chart that shows life expectancy vs unemployment rate, it suggests that the country with the lowest unemployment rate (Qatar) has life expectancy that is higher than other countries and the country with the highest unemployment rate (Eswatini) has life expectancy that is lower compare to other countries. See @fig-life-expectancy-vs-unemployment Furthermore, the correlation of the unemployment rate and life expectancy is generally negative [@life_expectancy]. 
+
+
+
+| Metric |  Value |
+|----------|----------|
+|Mean GDP Growth Rate (%)  | 41208.20
+|Mean Unemployment Rate (%) | 7.74
+|Mean GDP Per Capita (USD) | 41208.20
+|Mean Life Expectancy (Years) |  73.01
+

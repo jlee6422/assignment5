@@ -1,0 +1,73 @@
+---
+title: "World Development Indicator Dataset Analysis"
+author: "Jooha Lee"
+date: "2024-02-26"
+format:
+  revealjs:
+    slide-level: 2
+    theme: moon
+    transition: slide
+    scrollable: true
+    code-line-numbers: true
+    embed-resources: true
+    footer: "Footer text"
+editor:
+  render-on-save: true
+---
+
+# Introduction
+
+## Welcome to the Presentations
+
+This presentation will introduce some insights from the World Development Indicator Dataset
+
+
+# Data Analysis
+
+## Finding the countries with top 5 GDP per capita
+
+```{python}
+#| echo: false
+import pandas as pd
+import matplotlib.pyplot as plt
+wdi = pd.read_csv("/Users/joohalee/Desktop/a5/wdi.csv")
+```
+
+```{python}
+#| eval: true 
+df = pd.DataFrame(wdi)
+df_gdp_per_capita = df[['country', 'gdp_per_capita']]
+df_gdp_per_capita_sorted = df_gdp_per_capita.sort_values(by='gdp_per_capita', ascending=True)
+df_gdp_per_capita_sorted = df_gdp_per_capita_sorted.dropna()
+df_gdp_per_capita_sorted_top5 = df_gdp_per_capita_sorted.nlargest(5, 'gdp_per_capita')
+
+plt.figure(figsize=(12, 6))
+plt.barh(df_gdp_per_capita_sorted_top5['country'], df_gdp_per_capita_sorted_top5['gdp_per_capita'], color='skyblue')
+plt.xlabel('GDP per Capita (USD)')
+plt.ylabel('Country')
+plt.title('GDP per Capita by Country (Sorted Lowest to Highest)')
+plt.grid(axis='x', linestyle='--', alpha=0.7)
+plt.show()
+```
+
+First thing that I found out from the analysis of the data that was given, which was from 2022 as shown in the figure, Monaco has the highest gdp per capita, followed by Lienchtenstein, Luxembourg, Bermuda, and Norway as top 5 GDP per capita. Comparing this data to the one from 2001, we learn that the countries with top 5 gdp per capita are Lexembourg, Switzerland, Norway, United States, and Denmark.
+
+## Life expectancy vs Unployment rate
+
+```{python}
+df_life_expectancy = df[['country', 'life_expectancy', 'unemployment_rate']]
+df_life_expectancy_sorted = df_life_expectancy.sort_values(by='unemployment_rate', ascending=True)
+df_life_expectancy_sorted = df_life_expectancy_sorted.dropna()
+
+plt.figure(figsize=(10, 6))
+plt.scatter(df_life_expectancy_sorted['unemployment_rate'], df_life_expectancy_sorted['life_expectancy'], color='red', alpha=0.7, edgecolors='black')
+plt.xlabel('Unemployment Rate (%)')
+plt.ylabel('Life Expectancy (Years)')
+plt.title('Life Expectancy vs. Unemployment Rate')
+plt.grid(True, linestyle='--', alpha=0.7)
+```
+
+the correlation of the unemployment rate and life expectancy is generally negative
+
+
+# Thank You!
